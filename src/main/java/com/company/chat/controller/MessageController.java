@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-// In this class, we have left the caching approach for tutorial simplicity.
-// If users which they can enable caching in this application.
+// Just for manual management of Redis Cache
 @RestController
 @RequestMapping(value = "/api/redis/message")
 public class MessageController extends AbstractController {
 
-	@Autowired private MessageService service;
+	@Autowired
+	private MessageService service;
 
 	// Save a new message.
 	// Url - http://localhost:10091/api/redis/message

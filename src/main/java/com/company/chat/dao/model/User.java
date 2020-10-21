@@ -1,6 +1,11 @@
 package com.company.chat.dao.model;
 
-public class User {
+import org.springframework.stereotype.Component;
+
+import java.io.Serializable;
+
+@Component
+public class User implements Serializable {
 
 	private String id;
 	private String email;

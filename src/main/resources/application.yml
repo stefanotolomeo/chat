@@ -1,8 +1,15 @@
 # Application configuration.
 ## Reader can change the server port configuration as per their configuration idea.
-server.port=10091
+server:
+  port: 10091
 
 # Redis configuration.
 ## As we are running Redis on Docker we are setting up its configuration.
-spring.redis.host=localhost
-spring.redis.port=6379
+spring:
+  redis:
+    host: localhost
+    port: 6379
+
+active-mq:
+  broker-url: "tcp://localhost:61616"
+  topic: "chat-topic"

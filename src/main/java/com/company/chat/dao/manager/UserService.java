@@ -18,7 +18,7 @@ public class UserService implements IService<User> {
 	@Autowired
 	RedisTemplate<String, Object> redisTemplate;
 
-	private HashOperations<String, String, Message> hashOperations;
+	private HashOperations<String, String, User> hashOperations;
 
 	// This annotation makes sure that the method needs to be executed after
 	// dependency injection is done to perform any initialization.
@@ -28,24 +28,26 @@ public class UserService implements IService<User> {
 	}
 
 	@Override
-	public void save(User item) {
+	public void save(User user) {
 		// TODO
+		hashOperations.put(USER_CACHE, user.getId(), user);
 	}
 
 	@Override
 	public User findById(String id) {
 		// TODO
-		return null;
+		return (User) hashOperations.get(USER_CACHE, id);
 	}
 
 	@Override
 	public Map<String, User> findAll() {
 		// TODO
-		return null;
+		return hashOperations.entries(USER_CACHE);
 	}
 
 	@Override
 	public void delete(String id) {
 		// TODO
+		hashOperations.delete(USER_CACHE, id);
 	}
 }

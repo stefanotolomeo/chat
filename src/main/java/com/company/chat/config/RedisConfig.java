@@ -7,6 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 
@@ -26,6 +27,14 @@ public class RedisConfig {
 		final RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setConnectionFactory(jedisConnectionFactory());
 		redisTemplate.setValueSerializer(new GenericToStringSerializer<>(Object.class));
+		redisTemplate.setEnableTransactionSupport(true);
 		return redisTemplate;
 	}
+
+	// TODO: initialize HashOperations here and inject
+	/*
+	@Bean(name = "messageHashOperations")
+	public HashOperations<String, String, Message> messageHashOperations(){
+		return redisTemplate().opsForHash();
+	}*/
 }

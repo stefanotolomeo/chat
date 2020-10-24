@@ -3,8 +3,10 @@ package com.company.chat.controller;
 import com.company.chat.dao.manager.MessageService;
 import com.company.chat.dao.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 // Just for manual management of Redis Cache
@@ -13,49 +15,70 @@ import java.util.Map;
 public class MessageController extends AbstractController {
 
 	@Autowired
-	private MessageService service;
+	private MessageService messageService;
 
-	// Save a new message.
-	// Url - http://localhost:10091/api/redis/message
+	@Autowired
+	private RedisTemplate<String, Object> redisTemplate;
+
 	@PostMapping
 	public String save(
 			@RequestBody
 			final Message message) {
-		log.info("Saving the new message to the redis.");
-		service.save(message);
-		return "Successfully added. Message with id= " + message.getId();
+
+		String outcome;
+		try {
+			// (1) Set Message Timestamp
+			LocalDateTime timestamp = LocalDateTime.now();
+			message.setTimestamp(timestamp);
+
+			// (2) Save the Message
+			log.debug("Saving Message={}", message);
+			String savedId = messageService.save(message);
+
+			// (3) Set the Outcome
+			outcome = "Successfully added Message with ID = " + savedId;
+		} catch (Exception e) {
+			String msg = String.format("Exception while saving Message=%s", message);
+			log.error(msg, e);
+			outcome = "Unexpected Internal Error";
+		}
+		return outcome;
 	}
 
-	// Get all messages.
-	// Url - http://localhost:10091/api/redis/message/getall
-	@GetMapping("/getall")
+	@GetMapping("/all")
 	public Map<String, Message> findAll() {
-		log.info("Fetching all messages from the redis.");
-		final Map<String, Message> messageMap = service.findAll();
-		// Todo - Sort the map (optional).
-		return messageMap;
+		log.debug("Getting all Messages");
+		// TODO: eventually sort the results
+		return messageService.findAll();
 	}
 
-	// Get message by id.
-	// Url - http://localhost:10091/api/redis/message/get/<message_id>
-	@GetMapping("/get/{id}")
+	@GetMapping("/{id}")
 	public Message findById(
 			@PathVariable("id")
 			final String id) {
-		log.info("Fetching message with id= " + id);
-		return service.findById(id);
+		log.debug("Getting MessageId= " + id);
+		return messageService.findById(id);
 	}
 
-	// Delete message by id.
-	// Url - http://localhost:10091/api/redis/message/delete/<message_id>
-	@DeleteMapping("/delete/{id}")
-	public Map<String, Message> delete(
+	@DeleteMapping("/{id}")
+	public String delete(
 			@PathVariable("id")
 			final String id) {
-		log.info("Deleting message with id= " + id);
-		// Deleting the message.
-		service.delete(id);
-		// Returning the all messages (post the deleted one).
-		return findAll();
+		log.info("Deleting MessageId= " + id);
+
+		String outcome;
+		try {
+			// (1) Delete the Message
+			log.debug("Deleting MessageId={}", id);
+			Message deletedMessage = messageService.delete(id);
+
+			// (2) Set the Outcome
+			outcome = "Successfully deleted Message=" + deletedMessage;
+		} catch (Exception e) {
+			String msg = String.format("Exception while deleting MessageId=%s", id);
+			log.error(msg, e);
+			outcome = "Unexpected Internal Error";
+		}
+		return outcome;
 	}
 }

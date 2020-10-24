@@ -1,21 +1,28 @@
 package com.company.chat.dao.model;
 
+import net.minidev.json.annotate.JsonIgnore;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Component
-public class Message implements Serializable {
+public class Message extends AbstractItem implements Serializable {
 
-	@Id
-	@Indexed
+	private static final long serialVersionUID = 5061588246570750234L;
+
 	private String id;
-	// private Timestamp timestamp;
+
+	@JsonIgnore
+	private LocalDateTime timestamp;
+
 	private String content;
+
 	private String userSenderId;
+
 	private String userReceiverId;
 
 	public String getId() {
@@ -26,13 +33,13 @@ public class Message implements Serializable {
 		this.id = id;
 	}
 
-	/*public Timestamp getTimestamp() {
+	public LocalDateTime getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(Timestamp timestamp) {
+	public void setTimestamp(LocalDateTime timestamp) {
 		this.timestamp = timestamp;
-	}*/
+	}
 
 	public String getContent() {
 		return content;
@@ -60,7 +67,7 @@ public class Message implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Message{" + "id='" + id + '\'' + ", content='" + content + '\'' + ", userSenderId='" + userSenderId + '\''
-				+ ", userReceiverId='" + userReceiverId + '\'' + '}';
+		return "Message{" + "id='" + id + '\'' + ", timestamp=" + timestamp + ", content='" + content + '\'' + ", userSenderId='"
+				+ userSenderId + '\'' + ", userReceiverId='" + userReceiverId + '\'' + '}';
 	}
 }

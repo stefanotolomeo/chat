@@ -1,14 +1,16 @@
 package com.company.chat.dao.manager;
 
+import com.company.chat.dao.exceptions.FailedCRUDException;
+
 import java.util.Map;
 
 public interface IService<T> {
 
-	void save(T item);
+	String save(T item) throws FailedCRUDException;
 
 	T findById(String id);
 
 	Map<String, T> findAll();
 
-	void delete(String id);
+	T delete(String id) throws FailedCRUDException;
 }

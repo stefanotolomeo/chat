@@ -5,9 +5,12 @@ import org.springframework.stereotype.Component;
 import java.io.Serializable;
 
 @Component
-public class User implements Serializable {
+public class User extends AbstractItem implements Serializable {
 
+	private static final long serialVersionUID = 7146197649656866689L;
 	private String id;
+	private String name;
+	private String surname;
 	private String email;
 	private String password;
 
@@ -17,6 +20,22 @@ public class User implements Serializable {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getSurname() {
+		return surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
 	}
 
 	public String getEmail() {
@@ -33,10 +52,5 @@ public class User implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	@Override
-	public String toString() {
-		return "User{" + "id='" + id + '\'' + ", email='" + email + '\'' + ", password='" + password + '\'' + '}';
 	}
 }

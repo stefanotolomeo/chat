@@ -1,12 +1,11 @@
 package com.company.chat.controller;
 
-import com.company.chat.dao.manager.MessageService;
 import com.company.chat.dao.manager.UserService;
-import com.company.chat.dao.model.Message;
 import com.company.chat.dao.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
@@ -14,38 +13,62 @@ import java.util.Map;
 public class UserController extends AbstractController {
 
 	@Autowired
-	private UserService service;
+	private UserService userService;
 
 	@PostMapping
 	public String save(@RequestBody final User user) {
-		log.info("Saving the new user to the redis.");
-		service.save(user);
-		return "Successfully added. User with id= " + user.getId();
+		String outcome;
+		try {
+			// (1) Save the User
+			log.debug("Saving User={}", user);
+			String savedId = userService.save(user);
+
+			// (3) Set the Outcome
+			outcome = "Successfully added User with ID = " + savedId;
+		} catch (Exception e) {
+			String msg = String.format("Exception while saving User=%s", user);
+			log.error(msg, e);
+			outcome = "Unexpected Internal Error";
+		}
+		return outcome;
+
 	}
 
-	@GetMapping("/getall")
+	@GetMapping("/all")
 	public Map<String, User> findAll() {
-		log.info("Fetching all users from the redis.");
-		final Map<String, User> userMap = service.findAll();
-		// Todo - Sort the map (optional).
-		return userMap;
+		log.debug("Getting all Users");
+		// TODO: eventually sort the results
+		return userService.findAll();
 	}
 
-	@GetMapping("/get/{id}")
+	@GetMapping("/{id}")
 	public User findById(@PathVariable("id") final String id) {
-		log.info("Fetching user with id= " + id);
-		return service.findById(id);
+		log.debug("Getting UserId= " + id);
+		return userService.findById(id);
 	}
 
 	// Delete message by id.
 	// Url - http://localhost:10091/api/redis/message/delete/<message_id>
-	@DeleteMapping("/delete/{id}")
-	public Map<String, User> delete(@PathVariable("id") final String id) {
-		log.info("Deleting user with id= " + id);
-		// Deleting the user.
-		service.delete(id);
-		// Returning the all users(post the deleted one).
-		return findAll();
+	@DeleteMapping("/{id}")
+	public String delete(
+			@PathVariable("id")
+			final String id) {
+		log.info("Deleting UserId= " + id);
+
+		String outcome;
+		try {
+			// (1) Delete the User
+			log.debug("Deleting MessageId={}", id);
+			User deletedUser= userService.delete(id);
+
+			// (2) Set the Outcome
+			outcome = "Successfully deleted User=" + deletedUser;
+		} catch (Exception e) {
+			String msg = String.format("Exception while deleting UserId=%s", id);
+			log.error(msg, e);
+			outcome = "Unexpected Internal Error";
+		}
+		return outcome;
 	}
 
 }

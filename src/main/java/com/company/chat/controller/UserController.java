@@ -5,8 +5,8 @@ import com.company.chat.dao.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/redis/user")
@@ -16,7 +16,9 @@ public class UserController extends AbstractController {
 	private UserService userService;
 
 	@PostMapping
-	public String save(@RequestBody final User user) {
+	public String save(
+			@RequestBody
+			final User user) {
 		String outcome;
 		try {
 			// (1) Save the User
@@ -37,18 +39,17 @@ public class UserController extends AbstractController {
 	@GetMapping("/all")
 	public Map<String, User> findAll() {
 		log.debug("Getting all Users");
-		// TODO: eventually sort the results
-		return userService.findAll();
+		return userService.findAll().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
 	@GetMapping("/{id}")
-	public User findById(@PathVariable("id") final String id) {
+	public User findById(
+			@PathVariable("id")
+			final String id) {
 		log.debug("Getting UserId= " + id);
 		return userService.findById(id);
 	}
 
-	// Delete message by id.
-	// Url - http://localhost:10091/api/redis/message/delete/<message_id>
 	@DeleteMapping("/{id}")
 	public String delete(
 			@PathVariable("id")
@@ -59,7 +60,7 @@ public class UserController extends AbstractController {
 		try {
 			// (1) Delete the User
 			log.debug("Deleting MessageId={}", id);
-			User deletedUser= userService.delete(id);
+			User deletedUser = userService.delete(id);
 
 			// (2) Set the Outcome
 			outcome = "Successfully deleted User=" + deletedUser;

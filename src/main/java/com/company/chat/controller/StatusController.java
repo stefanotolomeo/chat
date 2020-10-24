@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/status")
@@ -25,8 +26,8 @@ public class StatusController extends AbstractController {
 	@GetMapping("/audit/all")
 	public Map<String, Audit> findAll() {
 		log.debug("Getting all Audits");
-		// TODO: eventually sort the results
-		return auditService.findAll();
+		return auditService.findAll().entrySet().stream().collect(Collectors.toMap(
+				Map.Entry::getKey, Map.Entry::getValue));
 	}
 
 	@GetMapping("/audit/{id}")

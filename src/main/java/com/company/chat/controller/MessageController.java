@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 // Just for manual management of Redis Cache
 @RestController
@@ -27,15 +27,11 @@ public class MessageController extends AbstractController {
 
 		String outcome;
 		try {
-			// (1) Set Message Timestamp
-			LocalDateTime timestamp = LocalDateTime.now();
-			message.setTimestamp(timestamp);
-
-			// (2) Save the Message
-			log.debug("Saving Message={}", message);
+			// (1) Save the Message
+			log.debug("Received Message={}", message);
 			String savedId = messageService.save(message);
 
-			// (3) Set the Outcome
+			// (2) Set the Outcome
 			outcome = "Successfully added Message with ID = " + savedId;
 		} catch (Exception e) {
 			String msg = String.format("Exception while saving Message=%s", message);
@@ -48,8 +44,7 @@ public class MessageController extends AbstractController {
 	@GetMapping("/all")
 	public Map<String, Message> findAll() {
 		log.debug("Getting all Messages");
-		// TODO: eventually sort the results
-		return messageService.findAll();
+		return messageService.findAll().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
 	@GetMapping("/{id}")

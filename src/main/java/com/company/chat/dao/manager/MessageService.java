@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
@@ -26,9 +27,14 @@ public class MessageService extends AbstractService implements IService<Message>
 	 * @throws FailedCRUDException: if at least one error occurs
 	 */
 	public String save(final Message message) throws FailedCRUDException {
+
+		// (1) Set Timestamp for Message
+		LocalDateTime timestamp = LocalDateTime.now();
+		message.setTimestamp(timestamp);
+
 		log.debug("Saving Message={}", message);
 
-		//execute a Transactional operation: This will contain the results of all operations in the transaction
+		// (2) Execute a Transactional operation
 		return makeTransactionalInsert(ItemType.MESSAGE, message);
 
 	}

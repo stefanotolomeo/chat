@@ -14,6 +14,13 @@ public class User extends AbstractItem implements Serializable {
 	private String email;
 	private String password;
 
+	public User(String name, String surname, String email, String password) {
+		this.name = name;
+		this.surname = surname;
+		this.email = email;
+		this.password = password;
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -52,5 +59,11 @@ public class User extends AbstractItem implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	@Override
+	public String toString() {
+		return "User{" + "id='" + id + '\'' + ", name='" + name + '\'' + ", surname='" + surname + '\'' + ", email='" + email + '\''
+				+ ", password='" + password + '\'' + '}';
 	}
 }

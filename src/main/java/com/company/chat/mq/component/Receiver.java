@@ -18,6 +18,7 @@ public class Receiver extends AbstractComponent implements MessageListener {
 			Message message = (Message) objectMessage.getObject();
 			//do additional processing
 			log.info("Received Message: " + message.toString());
+
 		} catch (Exception e) {
 			String msg = String.format("Exception while receiving Message on topic=%s", topic);
 			log.error(msg, e);

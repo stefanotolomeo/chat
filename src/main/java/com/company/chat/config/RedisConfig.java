@@ -1,18 +1,16 @@
 package com.company.chat.config;
 
-import com.company.chat.controller.MessageController;
 import com.company.chat.dao.manager.MessageService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 
 @Configuration
-@ComponentScan(basePackageClasses = { MessageController.class, MessageService.class, Message.class })
+@ComponentScan(basePackageClasses = { MessageService.class, Message.class })
 public class RedisConfig {
 
 	// Setting up the Jedis connection factory.
@@ -21,7 +19,7 @@ public class RedisConfig {
 		return new JedisConnectionFactory();
 	}
 
-	// Setting up the Redis template object.
+	// Setting up the Redis templates object.
 	@Bean
 	public RedisTemplate<String, Object> redisTemplate() {
 		final RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
@@ -31,10 +29,4 @@ public class RedisConfig {
 		return redisTemplate;
 	}
 
-	// TODO: initialize HashOperations here and inject
-	/*
-	@Bean(name = "messageHashOperations")
-	public HashOperations<String, String, Message> messageHashOperations(){
-		return redisTemplate().opsForHash();
-	}*/
 }

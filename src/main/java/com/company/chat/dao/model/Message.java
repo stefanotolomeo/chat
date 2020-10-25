@@ -1,9 +1,6 @@
 package com.company.chat.dao.model;
 
 import net.minidev.json.annotate.JsonIgnore;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
-import org.springframework.data.redis.core.index.Indexed;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;

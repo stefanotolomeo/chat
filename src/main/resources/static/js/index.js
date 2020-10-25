@@ -11,10 +11,8 @@ function loadUsers( jQuery ) {
 
 $(document).ready(loadUsers);
 
-document.querySelector('#welcomeForm').addEventListener('submit', connect, true)
-document.querySelector('#dialogueForm').addEventListener('submit', sendMessage, true)
-// $('#welcomeForm').on('submit', connect, true)
-// $('#dialogueForm').on('submit', sendMessage, true)
+$('#welcomeForm').submit(connect)
+$('#dialogueForm').submit(sendMessage)
 
 
 var stompClient = null;
@@ -29,23 +27,27 @@ const NEW_USER_ENDPOINT = "/app/chat.newUser"
 const SEND_MESSAGE_ENDPOINT = "/app/chat.sendMessage"
 
 function connect(event) {
-	name = document.querySelector('#name').value.trim().toLowerCase();
-    console.log("........ ActiveUsers")
-    console.log(activeUsers)
-    console.log("Current Name is: "+name)
-    console.log(activeUsers[name])
-	if(!name){
+	var rawName = $('#name').val();
+    console.log("Current Raw Name is: "+rawName)
+	if(!rawName){
 	    console.log("Invalid Username. Enter a value")
+	    $('#invalidUsernameError').removeClass('hidden')
+	    event.preventDefault()
 	    return
 	}
 
+    $('#invalidUsernameError').addClass('hidden')
+
+	name = rawName.trim().toLowerCase()
+	console.log("Current Name LOWERCASE is: "+name)
+
 	if(activeUsers[name]){
         console.log("Username already in use")
-        document.querySelector('#usernameError').classList.remove('hidden');
+        $('#usernameError').removeClass('hidden')
         event.preventDefault();
     } else {
-        document.querySelector('#usernameError').classList.add('hidden');
-        document.querySelector('#welcome-page').classList.add('hidden');
+        $('#usernameError').addClass('hidden');
+        $('#welcome-page').addClass('hidden');
 
         var socket = new SockJS(WEB_SOCKET_APP_NAME);
         stompClient = Stomp.over(socket);
@@ -65,18 +67,18 @@ function connectionSuccess() {
 }
 
 function sendMessage(event) {
-	var messageContent = document.querySelector('#chatMessage').value.trim();
+	var rawMessageContent = $('#chatMessage').val().trim();
 
-	if (messageContent && stompClient) {
+	if (rawMessageContent && stompClient) {
 		var chatMessage = {
 			sender : name,
-			content : document.querySelector('#chatMessage').value,
+			content : $('#chatMessage').val(),
 			topic : TOPIC_NAME
 		};
 
 		stompClient.send(SEND_MESSAGE_ENDPOINT, {}, JSON
 				.stringify(chatMessage));
-		document.querySelector('#chatMessage').value = '';
+		$('#chatMessage').val('');
 	}
 	event.preventDefault();
 }
@@ -99,8 +101,8 @@ function onMessageReceived(payload) {
             	contentToBeShown = msg.user.username + ' has joined the chat';
 
                 // CurrentUser is a new Logged User
-                document.querySelector('#welcome-page').classList.add('hidden');
-                document.querySelector('#dialogue-page').classList.remove('hidden');
+                $('#welcome-page').addClass('hidden');
+                $('#dialogue-page').removeClass('hidden');
 
                 activeUsers[currentUser] = currentUser;
 
@@ -121,11 +123,11 @@ function onMessageReceived(payload) {
 
       case "MESSAGE":
             if(msg.message.error){
-             // For ChatMessage an error occurred if Error is not empty
-             console.log("ERROR for ChatMessage="+msg)
-             isError = true;
+                 // For ChatMessage an error occurred if Error is not empty
+                 console.log("ERROR for ChatMessage="+msg)
+                 isError = true;
 
-             // TODO: manage
+                 // TODO: manage
             }
             messageElement.classList.add('message-data');
             contentToBeShown = msg.message.content;
@@ -158,8 +160,8 @@ function onMessageReceived(payload) {
 
     messageElement.appendChild(textElement)
 
-    document.querySelector('#messageList').appendChild(messageElement)
-    document.querySelector('#messageList').scrollTop =
-        document.querySelector('#messageList').scrollHeight
+    $('#messageList').append(messageElement)
+    const scrollHeight = $('#messageList').prop('scrollHeight')
+    $('#messageList').scrollTop(scrollHeight)
 
 }

@@ -7,5 +7,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/version")
 public class VersionController extends AbstractController {
 
-	// TODO: undestand and implement
+	// TODO: understand the usage and implement
 }

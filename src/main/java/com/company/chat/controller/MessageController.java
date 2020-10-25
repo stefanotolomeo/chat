@@ -1,5 +1,6 @@
 package com.company.chat.controller;
 
+import com.company.chat.dao.exceptions.ItemNotFoundException;
 import com.company.chat.dao.manager.MessageService;
 import com.company.chat.dao.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-// Just for manual management of Redis Cache
+// Just used for manual HTTP request
 @RestController
 @RequestMapping(value = "/api/redis/message")
 public class MessageController extends AbstractController {
@@ -69,6 +70,10 @@ public class MessageController extends AbstractController {
 
 			// (2) Set the Outcome
 			outcome = "Successfully deleted Message=" + deletedMessage;
+		} catch (ItemNotFoundException e) {
+			String msg = String.format("Cannot delete MessageId=%s", id);
+			log.error(msg, e);
+			outcome = e.getMessage();
 		} catch (Exception e) {
 			String msg = String.format("Exception while deleting MessageId=%s", id);
 			log.error(msg, e);

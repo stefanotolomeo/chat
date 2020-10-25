@@ -1,8 +1,10 @@
 package com.company.chat.dao.manager;
 
 import com.company.chat.dao.exceptions.FailedCRUDException;
+import com.company.chat.dao.exceptions.ItemNotFoundException;
 import com.company.chat.dao.model.ItemType;
 import com.company.chat.dao.model.Message;
+import com.company.chat.dao.model.OperationType;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +28,7 @@ public class MessageService extends AbstractService implements IService<Message>
 	 * @return the ID of the saved message
 	 * @throws FailedCRUDException: if at least one error occurs
 	 */
-	public String save(final Message message) throws FailedCRUDException {
+	public String save(final Message message) throws Exception {
 
 		// (1) Set Timestamp for Message
 		LocalDateTime timestamp = LocalDateTime.now();
@@ -39,6 +41,11 @@ public class MessageService extends AbstractService implements IService<Message>
 
 	}
 
+	@Override
+	public Message update(Message item) throws Exception {
+		throw new FailedCRUDException(OperationType.UPDATE, "Unsupported operation: cannot manually update a MESSAGE record");
+	}
+
 	public Message findById(final String id) {
 		return hashOperations.get(MESSAGE_CACHE, id);
 	}
@@ -48,9 +55,13 @@ public class MessageService extends AbstractService implements IService<Message>
 	}
 
 	// Delete employee by id operation.
-	public Message delete(String id) throws FailedCRUDException {
+	public Message delete(String id) throws Exception {
 
 		Message m = findById(id);
+		if (m == null) {
+			throw new ItemNotFoundException("Cannot Delete: Message ID not found");
+		}
+
 		makeTransactionalDelete(ItemType.MESSAGE, m);
 
 		return m;

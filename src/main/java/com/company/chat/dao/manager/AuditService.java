@@ -22,8 +22,13 @@ public class AuditService extends AbstractService implements IService<Audit> {
 	}
 
 	@Override
-	public String save(Audit audit) throws FailedCRUDException {
+	public String save(Audit audit) throws Exception {
 		throw new FailedCRUDException(OperationType.DELETE, "Unsupported operation: cannot manually insert an AUDIT record");
+	}
+
+	@Override
+	public Audit update(Audit item) throws Exception {
+		throw new FailedCRUDException(OperationType.UPDATE, "Unsupported operation: cannot manually update an AUDIT record");
 	}
 
 	@Override
@@ -37,7 +42,7 @@ public class AuditService extends AbstractService implements IService<Audit> {
 	}
 
 	@Override
-	public Audit delete(String id) throws FailedCRUDException {
+	public Audit delete(String id) throws Exception {
 		throw new FailedCRUDException(OperationType.DELETE, "Unsupported operation: cannot manually delete an AUDIT record");
 	}
 }

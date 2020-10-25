@@ -82,7 +82,7 @@ public abstract class AbstractService {
 			cache = USER_CACHE;
 			User u = (User) generalItem;
 			u.setId(nextItemId);
-			audit = new Audit(nextAuditId, LocalDateTime.now(), opType, cache, u.getId(), u.getEmail());
+			audit = new Audit(nextAuditId, LocalDateTime.now(), opType, cache, u.getId(), u.getUsername());
 			break;
 		default:
 			String msg = String.format("Unsupported Transactional-Insert operation for ItemType=%s", itemType);
@@ -167,7 +167,7 @@ public abstract class AbstractService {
 	}
 
 	private void validateId(OperationType operationType, String nextId) throws FailedCRUDException {
-		if(nextId == null || nextId.isEmpty()){
+		if (nextId == null || nextId.isEmpty()) {
 			throw new FailedCRUDException(operationType, "Cannot obtain the next Audit Id");
 		}
 	}

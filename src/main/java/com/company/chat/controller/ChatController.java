@@ -14,6 +14,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
+// This is the Controller used for WebSocket communication
 @Controller
 public class ChatController extends AbstractController {
 
@@ -27,8 +28,9 @@ public class ChatController extends AbstractController {
 	@SendTo("/topic/mychat")
 	public ChatMessage sendMessage(
 			@Payload
-					Message newMessage) throws Exception {
+					Message newMessage) {
 		log.info("Received NewMessage={}", newMessage);
+		ChatMessage chatMessage = new ChatMessage();
 
 		try {
 			// (1) Save Message/Audit record in cache
@@ -38,10 +40,12 @@ public class ChatController extends AbstractController {
 			log.info("Successfully added Message with ID={}", savedId);
 		} catch (Exception e) {
 			String msg = String.format("Exception while saving Message=%s", newMessage);
-			throw new Exception(msg, e);
+			log.error(msg, e);
+			chatMessage.setError(e.getMessage());
+			return chatMessage;
 		}
 
-		ChatMessage chatMessage = new ChatMessage();
+		// (2) Build and return response
 		chatMessage.setMessage(newMessage);
 		return chatMessage;
 	}
@@ -50,24 +54,28 @@ public class ChatController extends AbstractController {
 	@SendTo("/topic/mychat")
 	public UserMessage newUser(
 			@Payload
-					User newUser, SimpMessageHeaderAccessor headerAccessor) throws Exception {
+					User newUser, SimpMessageHeaderAccessor headerAccessor) {
 		log.info("Received NewUser={}", newUser);
+
+		UserMessage userMessage = new UserMessage();
 		try {
-			// (1) Save the User
+			// (1) Save or retrieve the User with username
 			String savedId = userService.save(newUser);
 			newUser.setId(savedId);
 
-			log.info("Successfully added User with ID={}", savedId);
+			log.info("User with ID={}", savedId);
 		} catch (Exception e) {
 			String msg = String.format("Exception while saving User=%s", newUser);
-			throw new Exception(msg, e);
+			log.error(msg, e);
+			userMessage.setError(e.getMessage());
+			userMessage.setUser(newUser);
+			return userMessage;
 		}
 
 		// (2) Save User into current session
 		headerAccessor.getSessionAttributes().put("user", newUser);
 
 		// (3) Build and return response
-		UserMessage userMessage = new UserMessage();
 		userMessage.setAction(UserAction.JOIN.name());
 		userMessage.setUser(newUser);
 		return userMessage;

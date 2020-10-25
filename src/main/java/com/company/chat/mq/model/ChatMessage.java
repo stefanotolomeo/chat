@@ -6,6 +6,7 @@ public class ChatMessage {
 
 	private final String type = MessageType.MESSAGE.name();
 	private Message message;
+	private String error;
 
 	public String getType() {
 		return type;
@@ -19,8 +20,16 @@ public class ChatMessage {
 		this.message = message;
 	}
 
+	public String getError() {
+		return error;
+	}
+
+	public void setError(String error) {
+		this.error = error;
+	}
+
 	@Override
 	public String toString() {
-		return "ChatMessage{" + "type='" + type + '\'' + ", message=" + message + '}';
+		return "ChatMessage{" + "type='" + type + '\'' + ", message=" + message + ", error='" + error + '\'' + '}';
 	}
 }

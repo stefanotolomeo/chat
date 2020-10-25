@@ -18,9 +18,9 @@ public class Message extends AbstractItem implements Serializable {
 
 	private String content;
 
-	private String userSenderId;
+	private String sender;
 
-	private String userReceiverId;
+	private String topic;
 
 	public String getId() {
 		return id;
@@ -46,25 +46,25 @@ public class Message extends AbstractItem implements Serializable {
 		this.content = content;
 	}
 
-	public String getUserSenderId() {
-		return userSenderId;
+	public String getSender() {
+		return sender;
 	}
 
-	public void setUserSenderId(String userSenderId) {
-		this.userSenderId = userSenderId;
+	public void setSender(String sender) {
+		this.sender = sender;
 	}
 
-	public String getUserReceiverId() {
-		return userReceiverId;
+	public String getTopic() {
+		return topic;
 	}
 
-	public void setUserReceiverId(String userReceiverId) {
-		this.userReceiverId = userReceiverId;
+	public void setTopic(String topic) {
+		this.topic = topic;
 	}
 
 	@Override
 	public String toString() {
-		return "Message{" + "id='" + id + '\'' + ", timestamp=" + timestamp + ", content='" + content + '\'' + ", userSenderId='"
-				+ userSenderId + '\'' + ", userReceiverId='" + userReceiverId + '\'' + '}';
+		return "Message{" + "id='" + id + '\'' + ", timestamp=" + timestamp + ", content='" + content + '\'' + ", sender='" + sender + '\''
+				+ ", topic='" + topic + '\'' + '}';
 	}
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-// Just used for manual HTTP request
 @RestController
 @RequestMapping(value = "/api/redis/message")
 public class MessageController extends AbstractController {

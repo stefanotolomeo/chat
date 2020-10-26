@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-// Just used for manual HTTP request
 @RestController
 @RequestMapping(value = "/api/status")
 public class StatusController extends AbstractController {

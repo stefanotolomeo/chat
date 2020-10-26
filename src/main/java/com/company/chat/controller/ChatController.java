@@ -7,6 +7,8 @@ import com.company.chat.dao.model.User;
 import com.company.chat.mq.model.ChatMessage;
 import com.company.chat.mq.model.UserAction;
 import com.company.chat.mq.model.UserMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Controller;
 // This is the Controller used for WebSocket communication
 @Controller
 public class ChatController extends AbstractController {
+
+	private static final Logger chatLog = LoggerFactory.getLogger("CHAT_LOGGER");
 
 	@Autowired
 	private MessageService messageService;
@@ -29,7 +33,7 @@ public class ChatController extends AbstractController {
 	public ChatMessage sendMessage(
 			@Payload
 					Message newMessage) {
-		log.info("Received NewMessage={}", newMessage);
+		chatLog.info("Received NewMessage={}", newMessage);
 		ChatMessage chatMessage = new ChatMessage();
 
 		try {
@@ -37,10 +41,10 @@ public class ChatController extends AbstractController {
 			String savedId = messageService.save(newMessage);
 			newMessage.setId(savedId);
 
-			log.info("Successfully added Message with ID={}", savedId);
+			chatLog.info("Successfully added Message with ID={}", savedId);
 		} catch (Exception e) {
 			String msg = String.format("Exception while saving Message=%s", newMessage);
-			log.error(msg, e);
+			chatLog.error(msg, e);
 			chatMessage.setError(e.getMessage());
 			return chatMessage;
 		}
@@ -55,7 +59,7 @@ public class ChatController extends AbstractController {
 	public UserMessage newUser(
 			@Payload
 					User newUser, SimpMessageHeaderAccessor headerAccessor) {
-		log.info("Received NewUser={}", newUser);
+		chatLog.info("Received NewUser={}", newUser);
 
 		UserMessage userMessage = new UserMessage();
 		try {
@@ -63,10 +67,10 @@ public class ChatController extends AbstractController {
 			String savedId = userService.save(newUser);
 			newUser.setId(savedId);
 
-			log.info("User with ID={}", savedId);
+			chatLog.info("User with ID={}", savedId);
 		} catch (Exception e) {
 			String msg = String.format("Exception while saving User=%s", newUser);
-			log.error(msg, e);
+			chatLog.error(msg, e);
 			userMessage.setError(e.getMessage());
 			userMessage.setUser(newUser);
 			return userMessage;

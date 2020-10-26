@@ -4,6 +4,8 @@ import com.company.chat.dao.manager.UserService;
 import com.company.chat.dao.model.User;
 import com.company.chat.mq.model.UserAction;
 import com.company.chat.mq.model.UserMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -16,6 +18,8 @@ import javax.inject.Inject;
 
 @Component
 public class WebSocketListener extends AbstractComponent {
+
+	private static final Logger chatLog = LoggerFactory.getLogger("CHAT_LOGGER");
 
 	@Autowired
 	private SimpMessageSendingOperations messagingTemplate;
@@ -38,13 +42,14 @@ public class WebSocketListener extends AbstractComponent {
 		User u = (User) headerAccessor.getSessionAttributes().get("user");
 		if (u != null) {
 
+			chatLog.info("Disconnecting User={}", u);
 			String userId = u.getId();
 			try {
 				// (1) Delete the User
-				log.debug("Deleting MessageId={}", userId);
+				chatLog.debug("Deleting UserId={}", userId);
 				User deletedUser = userService.delete(userId);
 
-				log.debug("Successfully deleted User={}", deletedUser);
+				chatLog.debug("Successfully deleted User={}", deletedUser);
 			} catch (Exception e) {
 				String msg = String.format("Exception while deleting UserId=%s", userId);
 				throw new Exception(msg, e);

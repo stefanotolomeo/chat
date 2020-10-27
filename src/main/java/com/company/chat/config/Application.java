@@ -32,7 +32,7 @@ public class Application {
 		final long mbSize = 1024L * 1024L;
 		final String mega = " MB";
 
-		log.info("============================ PokeSpeare =============================");
+		log.info("============================ Chat-Message =============================");
 		log.info("============================ Memory Info =============================");
 		log.info("Free memory: {}", format.format(freeMemory / mbSize) + mega);
 		log.info("Allocated memory: {}", format.format(allocatedMemory / mbSize) + mega);

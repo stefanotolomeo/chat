@@ -123,15 +123,15 @@ Request Parameter:
 </details>
 
 <details>
-<summary><b>AUDIT CACHE</b></summary>
+<summary><b>STATUS (AUDIT CACHE)</b></summary>
  
 **Endpoint**: <code>`GET /api/status/audit/all` </code>
 
-Return: all messages
+Return: all audit records
 
 **Endpoint**: <code>`GET /api/status/audit/<string:id>` </code>
 
-Return: the requested message
+Return: the requested audit record
 ```json
 {
   "id": "string",
@@ -145,6 +145,13 @@ Return: the requested message
 
 </details>
 
+<details>
+<summary><b>VERSION</b></summary>
+
+**Endpoint**: <code>`GET /api/version` </code>
+
+Return: the application version
+</details>
 
 ## Project Management
 This Application is developed in JAVA 8 and Spring Framework (in particular, Spring Boot).

@@ -22,6 +22,14 @@ public class Message extends AbstractItem implements Serializable {
 
 	private String topic;
 
+	public Message(String id, LocalDateTime timestamp, String content, String sender, String topic) {
+		this.id = id;
+		this.timestamp = timestamp;
+		this.content = content;
+		this.sender = sender;
+		this.topic = topic;
+	}
+
 	public String getId() {
 		return id;
 	}

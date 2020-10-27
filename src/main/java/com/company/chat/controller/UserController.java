@@ -75,7 +75,7 @@ public class UserController extends AbstractController {
 			User deletedUser = userService.delete(id);
 
 			// (2) Set the Outcome
-			outcome = "Successfully deleted User=" + deletedUser;
+			outcome = "Successfully deleted User with ID = " + deletedUser;
 		} catch (ItemNotFoundException e) {
 			String msg = String.format("Cannot delete UserId=%s", id);
 			log.error(msg, e);

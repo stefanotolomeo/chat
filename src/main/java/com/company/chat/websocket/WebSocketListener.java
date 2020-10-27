@@ -1,7 +1,8 @@
-package com.company.chat.mq.component;
+package com.company.chat.websocket;
 
 import com.company.chat.dao.manager.UserService;
 import com.company.chat.dao.model.User;
+import com.company.chat.mq.component.AbstractComponent;
 import com.company.chat.mq.model.UserAction;
 import com.company.chat.mq.model.UserMessage;
 import org.slf4j.Logger;

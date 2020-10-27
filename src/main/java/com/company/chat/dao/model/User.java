@@ -16,6 +16,11 @@ public class User extends AbstractItem implements Serializable {
 	// private String email;
 	// private String password;
 
+	public User(String id, String username) {
+		this.id = id;
+		this.username = username;
+	}
+
 	public String getId() {
 		return id;
 	}

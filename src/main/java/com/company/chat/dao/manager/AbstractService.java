@@ -1,5 +1,6 @@
 package com.company.chat.dao.manager;
 
+import com.company.chat.config.Constants;
 import com.company.chat.dao.exceptions.FailedCRUDException;
 import com.company.chat.dao.model.*;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.ValueOperations;
 
+import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,38 +20,23 @@ public abstract class AbstractService {
 
 	protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private final String INDEX_MESSAGE = "INDEX_MESSAGE";
-	private final String INDEX_USER = "INDEX_USER";
-	private final String INDEX_AUDIT = "INDEX_AUDIT";
-
-	protected final String MESSAGE_CACHE = "MESSAGE";
-	protected final String AUDIT_CACHE = "AUDIT";
-	protected final String USER_CACHE = "USER";
-
 	@Autowired
-	protected RedisTemplate<String, Object> redisTemplate;
+	private RedisTemplate<String, Object> redisTemplate;
 
-	protected ValueOperations<String, Object> valueOperations;
-
-	protected void initializeIndexesCaches() {
-		// (1) Initiliaze ValueOperations Caches (for Index)
-		valueOperations = redisTemplate.opsForValue();
-		valueOperations.setIfAbsent(INDEX_MESSAGE, 0L);
-		valueOperations.setIfAbsent(INDEX_USER, 0L);
-		valueOperations.setIfAbsent(INDEX_AUDIT, 0L);
-	}
+	@Inject
+	private ValueOperations<String, Object> valueOperations;
 
 	String getNextId(ItemType itemType) {
 		Long newId = null;
 		switch (itemType) {
 		case MESSAGE:
-			newId = valueOperations.increment(INDEX_MESSAGE);
+			newId = valueOperations.increment(Constants.INDEX_MESSAGE);
 			break;
 		case USER:
-			newId = valueOperations.increment(INDEX_USER);
+			newId = valueOperations.increment(Constants.INDEX_USER);
 			break;
 		case AUDIT:
-			newId = valueOperations.increment(INDEX_AUDIT);
+			newId = valueOperations.increment(Constants.INDEX_AUDIT);
 			break;
 		}
 		log.debug("NextId is {}", newId);
@@ -70,19 +57,19 @@ public abstract class AbstractService {
 		case MESSAGE:
 			nextItemId = getNextId(ItemType.MESSAGE);
 			validateId(opType, nextItemId);
-			cache = MESSAGE_CACHE;
+			cache = Constants.MESSAGE_CACHE;
 			Message m = (Message) generalItem;
 			m.setId(nextItemId);
-			audit = new Audit(nextAuditId, m.getTimestamp(), opType, cache, m.getId(), m.getContent());
+			audit = new Audit(nextAuditId, m.getTimestamp(), opType, cache, m.getId(), m.toString());
 			break;
 
 		case USER:
 			nextItemId = getNextId(ItemType.USER);
 			validateId(opType, nextItemId);
-			cache = USER_CACHE;
+			cache = Constants.USER_CACHE;
 			User u = (User) generalItem;
 			u.setId(nextItemId);
-			audit = new Audit(nextAuditId, LocalDateTime.now(), opType, cache, u.getId(), u.getUsername());
+			audit = new Audit(nextAuditId, LocalDateTime.now(), opType, cache, u.getId(), u.toString());
 			break;
 		default:
 			String msg = String.format("Unsupported Transactional-Insert operation for ItemType=%s", itemType);
@@ -98,7 +85,7 @@ public abstract class AbstractService {
 
 				// (2) Save data
 				operations.opsForHash().put(cache, nextItemId, generalItem);
-				operations.opsForHash().put(AUDIT_CACHE, audit.getId(), audit);
+				operations.opsForHash().put(Constants.AUDIT_CACHE, audit.getId(), audit);
 
 				// (3) Execute operations
 				return operations.exec();
@@ -126,13 +113,13 @@ public abstract class AbstractService {
 		Audit audit;
 		switch (itemType) {
 		case MESSAGE:
-			cache = MESSAGE_CACHE;
+			cache = Constants.MESSAGE_CACHE;
 			Message m = (Message) generalItem;
 			itemId = m.getId();
-			audit = new Audit(nextAuditId, LocalDateTime.now(), opType, cache, m.getId(), m.getContent());
+			audit = new Audit(nextAuditId, LocalDateTime.now(), opType, cache, m.getId(), m.toString());
 			break;
 		case USER:
-			cache = USER_CACHE;
+			cache = Constants.USER_CACHE;
 			User u = (User) generalItem;
 			itemId = u.getId();
 			audit = new Audit(nextAuditId, LocalDateTime.now(), opType, cache, u.getId(), u.toString());
@@ -151,7 +138,7 @@ public abstract class AbstractService {
 
 				// (2) Delete data
 				operations.opsForHash().delete(cache, itemId);
-				operations.opsForHash().put(AUDIT_CACHE, audit.getId(), audit);
+				operations.opsForHash().put(Constants.AUDIT_CACHE, audit.getId(), audit);
 
 				// (3) Execute operations
 				return operations.exec();

@@ -1,5 +1,6 @@
 package com.company.chat.dao.manager;
 
+import com.company.chat.config.Constants;
 import com.company.chat.dao.exceptions.FailedCRUDException;
 import com.company.chat.dao.exceptions.ItemNotFoundException;
 import com.company.chat.dao.model.ItemType;
@@ -8,20 +9,15 @@ import com.company.chat.dao.model.OperationType;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
 public class MessageService extends AbstractService implements IService<Message> {
 
+	@Inject
 	private HashOperations<String, String, Message> hashOperations;
-
-	@PostConstruct
-	private void intializeHashOperations() {
-		initializeIndexesCaches();
-		hashOperations = redisTemplate.opsForHash();
-	}
 
 	/**
 	 * @param message: the message to be saved
@@ -47,11 +43,11 @@ public class MessageService extends AbstractService implements IService<Message>
 	}
 
 	public Message findById(final String id) {
-		return hashOperations.get(MESSAGE_CACHE, id);
+		return hashOperations.get(Constants.MESSAGE_CACHE, id);
 	}
 
 	public Map<String, Message> findAll() {
-		return hashOperations.entries(MESSAGE_CACHE);
+		return hashOperations.entries(Constants.MESSAGE_CACHE);
 	}
 
 	// Delete employee by id operation.

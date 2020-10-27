@@ -200,16 +200,19 @@ To run Integration Tests the following tools must be installed:
 Steps to run integration-test:
 1. Turn on docker containers for test:
 - Move to folder ./docker: <code>cd docker/ </code>
-- Build containers with docker-compose: <code>docker-compose -f docker-compose-chat.yml build</code>
-- Run containers with docker-compose: <code>docker-compose -f docker-compose-chat.yml up</code>
+- Build containers with docker-compose: <code>docker-compose -f docker-compose-it.yml build</code>
+- Run containers with docker-compose: <code>docker-compose -f docker-compose-it.yml up</code>
 
 2. Choose the test and run it
+
+3. Stop containers with docker-compose: <code>docker-compose -f docker-compose-it.yml down</code>
 
 ## Deploy and Run 
 The application can be deploy and run within Docker container using the DockerFile and Docker-Compose. 
 1. Install [Docker](https://docs.docker.com/get-docker/);
 2. Install [Docker-Compose](https://docs.docker.com/compose/install/);
 3. On the project root:
+    - Use maven goal to create the jar into /target: <code>mvn clean package</code>
     - Build the container: <code>docker-compose -f docker-compose-chat.yml build </code>
     - Run the container: <code>docker-compose -f docker-compose-chat.yml.yml up</code>
 4. Access the application via browser: [http://localhost:10091](http://localhost:10091)
@@ -223,3 +226,4 @@ The application can be deploy and run within Docker container using the DockerFi
 2. Manage security and possible related-issues;
 3. Improve RESTful API: add "Accept" properties, respond with error status, implement security, version the API
 4. Use a dedicated model for DTO;
+5. Improve the log pattern for messages into the dedicated log-file.

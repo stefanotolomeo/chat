@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.company</groupId>
-    <artifactId>chat</artifactId>
+    <artifactId>chat-message</artifactId>
     <version>1.0.0</version>
 
     <name>Chat</name>

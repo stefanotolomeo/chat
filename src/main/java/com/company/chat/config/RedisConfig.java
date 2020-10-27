@@ -3,7 +3,6 @@ package com.company.chat.config;
 import com.company.chat.dao.manager.MessageService;
 import com.company.chat.dao.model.Audit;
 import com.company.chat.dao.model.User;
-import org.junit.jupiter.api.BeforeEach;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +12,7 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
+import redis.clients.jedis.JedisPoolConfig;
 
 @Configuration
 @ComponentScan(basePackageClasses = { MessageService.class, Message.class })
@@ -20,8 +20,18 @@ public class RedisConfig {
 
 	// Setting up the Jedis connection factory.
 	@Bean
-	JedisConnectionFactory jedisConnectionFactory() {
-		return new JedisConnectionFactory();
+	public JedisConnectionFactory jedisConnectionFactory() {
+		JedisPoolConfig poolConfig = new JedisPoolConfig();
+		poolConfig.setMaxTotal(10);
+		poolConfig.setMaxIdle(5);
+		poolConfig.setMinIdle(1);
+		poolConfig.setTestOnBorrow(true);
+		poolConfig.setTestOnReturn(true);
+		poolConfig.setTestWhileIdle(true);
+		poolConfig.setMaxWaitMillis(10 * 1000);
+
+		return new JedisConnectionFactory(poolConfig);
+
 	}
 
 	// Setting up the Redis templates object.
@@ -35,22 +45,22 @@ public class RedisConfig {
 	}
 
 	@Bean
-	public HashOperations<String, String, User> userHashOperations(){
+	public HashOperations<String, String, User> userHashOperations() {
 		return redisTemplate().opsForHash();
 	}
 
 	@Bean
-	public HashOperations<String, String, com.company.chat.dao.model.Message> messageHashOperations(){
+	public HashOperations<String, String, com.company.chat.dao.model.Message> messageHashOperations() {
 		return redisTemplate().opsForHash();
 	}
 
 	@Bean
-	public HashOperations<String, String, Audit> auditHashOperations(){
+	public HashOperations<String, String, Audit> auditHashOperations() {
 		return redisTemplate().opsForHash();
 	}
 
 	@Bean
-	public ValueOperations<String, Object> valueOperations(){
+	public ValueOperations<String, Object> valueOperations() {
 		// (1) Initiliaze ValueOperations Caches (for Index)
 		ValueOperations<String, Object> valueOperations = redisTemplate().opsForValue();
 		valueOperations.setIfAbsent(Constants.INDEX_MESSAGE, 0L);

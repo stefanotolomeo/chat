@@ -9,7 +9,7 @@
     <!-- A specific FileAppender to track Chat Messages -->
     <appender name="CHAT_MESSAGES_FILE" class="ch.qos.logback.core.FileAppender">
         <!-- Choose the right path for this file based on the application deployment location -->
-        <file>logs/chat_message.log</file>
+        <file>chat-message/logs/chat_message.log</file>
         <append>true</append>
         <encoder>
             <!-- TODO: Customize this pattern based on the desired layout -->

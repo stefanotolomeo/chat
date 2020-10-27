@@ -238,4 +238,5 @@ In particular, there are two containers running in localhost (of course) and und
 4. Improve the log pattern for messages into the dedicated log-file.
 5. Manage logs on client side (avoid using console.log())
 6. Evaluate scalability: how many connections could be taken simultaneously?
-7. If needed, switch to a queue architecture (IBMMQ, ActiveMq, ..)
+7. Make test for ChatController
+8. If needed, switch to a queue architecture (IBMMQ, ActiveMq, ..)

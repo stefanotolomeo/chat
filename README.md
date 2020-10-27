@@ -219,7 +219,7 @@ Steps to run integration-test:
 3. Stop containers with docker-compose: <code>docker-compose -f docker-compose-it.yml down</code>
 
 ## Deploy and Run 
-The application can be deploy and run within Docker container using the DockerFile and Docker-Compose. 
+The application can be deployed and run within Docker container using the DockerFile and Docker-Compose. 
 
 In particular, there are two containers running in localhost (of course) and under the same network (with the parameter: <code>network_mode: "host" </code>):
 - Redis Server Container, on port 6379;
@@ -241,6 +241,6 @@ In particular, there are two containers running in localhost (of course) and und
 3. Use a dedicated model for DTO;
 4. Improve the log pattern for messages into the dedicated log-file.
 5. Manage logs on client side (avoid using console.log())
-6. Evaluate scalability: how many connections could be taken simultaneously?
+6. Check and evaluate app configurations to guarantee scalability (this should not be the case)
 7. Make test for ChatController
-8. If needed, switch to a queue architecture (IBMMQ, ActiveMq, ..)
+8. If needed, switch to a queue architecture (IBMMQ, ActiveMq, etc.)

@@ -1,4 +1,4 @@
-package com.company.chat.mq.model;
+package com.company.chat.websocket.component.model;
 
 import com.company.chat.dao.model.Message;
 

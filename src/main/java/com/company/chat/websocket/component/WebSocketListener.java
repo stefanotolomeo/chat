@@ -1,10 +1,9 @@
-package com.company.chat.websocket;
+package com.company.chat.websocket.component;
 
 import com.company.chat.dao.manager.UserService;
 import com.company.chat.dao.model.User;
-import com.company.chat.mq.component.AbstractComponent;
-import com.company.chat.mq.model.UserAction;
-import com.company.chat.mq.model.UserMessage;
+import com.company.chat.websocket.component.model.UserAction;
+import com.company.chat.websocket.component.model.UserMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -225,12 +225,10 @@ In particular, there are two containers running in localhost (of course) and und
 5. Turn off the container: <code>docker-compose -f docker-compose-chat.yml down</code>
 
 ## Limitations and Possible Optimizations
-1. Move to ActiveMq: configure the Broker, enable STOMP from docker and migrate to ActiveMq. The following dependencies are needed: 
-    - Amqp: 
-    - ActiveMq:
-    - Netty:
-2. Manage security and possible related-issues;
-3. Improve RESTful API: add "Accept" properties, respond with error status, implement security, version the API
-4. Use a dedicated model for DTO;
-5. Improve the log pattern for messages into the dedicated log-file.
-6. Manage logs on client side (avoid using console.log())
+1. Manage security and possible related-issues;
+2. Improve RESTful API: add properties, respond with error status, implement security, version the API
+3. Use a dedicated model for DTO;
+4. Improve the log pattern for messages into the dedicated log-file.
+5. Manage logs on client side (avoid using console.log())
+6. Evaluate scalability: how many connections could be taken simultaneously?
+7. If needed, switch to a queue architecture (IBMMQ, ActiveMq, ..)

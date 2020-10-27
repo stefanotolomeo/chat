@@ -4,7 +4,7 @@ var activeUsers = {}
 
 function loadUsers( jQuery ) {
     $.get("http://localhost:10091/api/redis/user/allByUsername", function(data, status){
-        console.log(data)
+        // console.log(data)
         activeUsers = data
       });
 }
@@ -23,8 +23,8 @@ const WEB_SOCKET_APP_NAME = '/websocketApp'
 const TOPIC_NAME = "mychat"
 const TOPIC_PATH = '/topic/' + TOPIC_NAME
 
-const NEW_USER_ENDPOINT = "/app/chat.newUser"
-const SEND_MESSAGE_ENDPOINT = "/app/chat.sendMessage"
+const NEW_USER_ENDPOINT = "/app/chat/newUser"
+const SEND_MESSAGE_ENDPOINT = "/app/chat/sendMessage"
 
 function connect(event) {
 	var rawName = $('#name').val();

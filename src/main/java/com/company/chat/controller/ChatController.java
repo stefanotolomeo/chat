@@ -28,7 +28,7 @@ public class ChatController extends AbstractController {
 	@Autowired
 	private UserService userService;
 
-	@MessageMapping("/chat.sendMessage")
+	@MessageMapping("/chat/sendMessage")
 	@SendTo("/topic/mychat")
 	public ChatMessage sendMessage(
 			@Payload
@@ -54,7 +54,7 @@ public class ChatController extends AbstractController {
 		return chatMessage;
 	}
 
-	@MessageMapping("/chat.newUser")
+	@MessageMapping("/chat/newUser")
 	@SendTo("/topic/mychat")
 	public UserMessage newUser(
 			@Payload

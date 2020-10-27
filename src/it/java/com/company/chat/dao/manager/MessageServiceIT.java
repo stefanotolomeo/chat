@@ -2,12 +2,10 @@ package com.company.chat.dao.manager;
 
 import com.company.chat.config.Constants;
 import com.company.chat.dao.exceptions.FailedCRUDException;
-import com.company.chat.dao.exceptions.ItemAlreadyExistException;
 import com.company.chat.dao.exceptions.ItemNotFoundException;
 import com.company.chat.dao.model.Audit;
 import com.company.chat.dao.model.Message;
 import com.company.chat.dao.model.OperationType;
-import com.company.chat.dao.model.User;
 import com.company.chat.itconfig.BaseIT;
 import org.junit.jupiter.api.*;
 
@@ -125,7 +123,8 @@ public class MessageServiceIT extends BaseIT {
 		List<Audit> auditList = auditHashOperations.values(Constants.AUDIT_CACHE);
 		Assertions.assertNotNull(auditList);
 		Assertions.assertFalse(auditList.isEmpty());
-		Audit expected_audit = new Audit(null, null, OperationType.INSERT, Constants.MESSAGE_CACHE, newMessage.getId(), newMessage.toString());
+		Audit expected_audit = new Audit(null, null, OperationType.INSERT, Constants.MESSAGE_CACHE, newMessage.getId(),
+				newMessage.toString());
 		makeAssertionsOnAudit(expected_audit, auditList.get(0));
 	}
 

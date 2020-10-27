@@ -68,7 +68,7 @@ public class MessageController extends AbstractController {
 			Message deletedMessage = messageService.delete(id);
 
 			// (2) Set the Outcome
-			outcome = "Successfully deleted Message=" + deletedMessage;
+			outcome = "Successfully deleted Message with ID = " + deletedMessage;
 		} catch (ItemNotFoundException e) {
 			String msg = String.format("Cannot delete MessageId=%s", id);
 			log.error(msg, e);

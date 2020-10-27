@@ -209,6 +209,12 @@ Steps to run integration-test:
 
 ## Deploy and Run 
 The application can be deploy and run within Docker container using the DockerFile and Docker-Compose. 
+
+In particular, there are two containers running in localhost (of course) and under the same network (with the parameter: <code>network_mode: "host" </code>):
+- Redis Server Container, on port 6379;
+- Chat-Message Container, on port 10091 which connects to Redis Server Container;
+
+### Steps
 1. Install [Docker](https://docs.docker.com/get-docker/);
 2. Install [Docker-Compose](https://docs.docker.com/compose/install/);
 3. On the project root:
@@ -227,3 +233,4 @@ The application can be deploy and run within Docker container using the DockerFi
 3. Improve RESTful API: add "Accept" properties, respond with error status, implement security, version the API
 4. Use a dedicated model for DTO;
 5. Improve the log pattern for messages into the dedicated log-file.
+6. Manage logs on client side (avoid using console.log())

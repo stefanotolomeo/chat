@@ -28,9 +28,9 @@ const SEND_MESSAGE_ENDPOINT = "/app/chat.sendMessage"
 
 function connect(event) {
 	var rawName = $('#name').val();
-    console.log("Current Raw Name is: "+rawName)
+    // console.log("Current Raw Name is: "+rawName)
 	if(!rawName){
-	    console.log("Invalid Username. Enter a value")
+	    // console.log("Invalid Username. Enter a value")
 	    $('#invalidUsernameError').removeClass('hidden')
 	    event.preventDefault()
 	    return
@@ -39,10 +39,10 @@ function connect(event) {
     $('#invalidUsernameError').addClass('hidden')
 
 	name = rawName.trim().toLowerCase()
-	console.log("Current Name LOWERCASE is: "+name)
+	// console.log("Current Name LOWERCASE is: "+name)
 
 	if(activeUsers[name]){
-        console.log("Username already in use")
+        // console.log("Username already in use")
         $('#usernameError').removeClass('hidden')
         event.preventDefault();
     } else {
@@ -90,9 +90,8 @@ function onMessageReceived(payload) {
 
     var isError = false
     var contentToBeShown
-    console.log(msg)
-    console.log("-----> ActiveUsers List is")
-    console.log(activeUsers)
+    // console.log(msg)
+    // console.log(activeUsers)
 	switch(msg.type) {
 	    case "USER":
 	        const currentUser = msg.user.username
@@ -113,7 +112,8 @@ function onMessageReceived(payload) {
                 delete activeUsers[currentUser];
             } else {
                 // For UserMessage an error occurred if action does not match
-                console.log("ERROR for UserMessage="+msg)
+                // TODO: manage
+                // console.log("ERROR for UserMessage="+msg)
                 isError = true;
 
                 delete activeUsers[currentUser];
@@ -124,7 +124,7 @@ function onMessageReceived(payload) {
       case "MESSAGE":
             if(msg.message.error){
                  // For ChatMessage an error occurred if Error is not empty
-                 console.log("ERROR for ChatMessage="+msg)
+                 // console.log("ERROR for ChatMessage="+msg)
                  isError = true;
 
                  // TODO: manage
@@ -147,8 +147,7 @@ function onMessageReceived(payload) {
         console.log("Error: unrecognized Message type")
     }
 
-    console.log("<----- ActiveUsers List is")
-    console.log(activeUsers)
+    // console.log(activeUsers)
     if(isError){
         console.log("An error occurred")
         return

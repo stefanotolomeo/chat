@@ -88,7 +88,7 @@ button.accent {
 }
 
 .welcome-page-container {
-	background-color: grey;
+	background-color: rgb(66,103,178);
 	width: 100%;
 	max-width: 500px;
 	display: inline-block;
@@ -111,7 +111,7 @@ button.accent {
 }
 
 .dialogue-container {
-	background-color: green;
+	background-color: rgb(66,103,178);
 	margin: 10px 0;
 	max-width: 700px;
 	margin-left: auto;
@@ -119,7 +119,7 @@ button.accent {
 	box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
 	margin-top: 30px;
 	height: calc(100% - 60px);
-	max-height: 600px;
+	max-height: 800px;
 	position: relative;
 }
 
@@ -215,6 +215,14 @@ button.accent {
 .dialogue-header h2 {
 	margin: 0;
 	font-weight: 500;
+}
+
+.whiteText{
+    color: white
+}
+
+.input-group {
+    display: block !important
 }
 
 @media screen and (max-width: 730px) {

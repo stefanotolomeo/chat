@@ -7,6 +7,10 @@ The goal of this project is to provide a real-time chat application.
 Use your browser to connect to the application on localhost. 
 The welcome page asks you to insert your username and then you can start chatting with other online users.
 
+## Architecture
+The document "Implementation_Architecture.pdf" contains all the details about the software architecture and the overall workflow. 
+It is available under the root of the project. 
+
 ## Monitoring
 Audit records, Messages and Users Log-in/out events are saved into internal REDIS caches.
 Thus, there are three different caches:

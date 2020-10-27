@@ -1,6 +1,7 @@
 package com.company.chat.dao.manager;
 
 import com.company.chat.config.Constants;
+import com.company.chat.dao.exceptions.InvalidInputException;
 import com.company.chat.dao.exceptions.ItemAlreadyExistException;
 import com.company.chat.dao.exceptions.ItemNotFoundException;
 import com.company.chat.dao.model.ItemType;
@@ -8,7 +9,6 @@ import com.company.chat.dao.model.User;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.Map;
 import java.util.Optional;
@@ -21,6 +21,9 @@ public class UserService extends AbstractService implements IService<User> {
 
 	@Override
 	public String save(User user) throws Exception {
+		if(user == null || user.getUsername() == null){
+			throw new InvalidInputException("Invalid User: username is null");
+		}
 		// Only "Logged" users are into UserCache.
 		// This check is to avoid multiple login with the same username
 		// TODO: future improvements (e.g. use username as KEY)
@@ -37,6 +40,9 @@ public class UserService extends AbstractService implements IService<User> {
 
 	@Override
 	public User update(User user) throws Exception {
+		if(user == null || user.getId() == null || user.getUsername() == null){
+			throw new InvalidInputException("Invalid User: id or username is null");
+		}
 		if (hashOperations.get(Constants.USER_CACHE, user.getId()) == null) {
 			throw new ItemNotFoundException("Cannot Update: User ID not found");
 		}

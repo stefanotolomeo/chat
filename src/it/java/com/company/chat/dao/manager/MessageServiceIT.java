@@ -2,6 +2,7 @@ package com.company.chat.dao.manager;
 
 import com.company.chat.config.Constants;
 import com.company.chat.dao.exceptions.FailedCRUDException;
+import com.company.chat.dao.exceptions.InvalidInputException;
 import com.company.chat.dao.exceptions.ItemNotFoundException;
 import com.company.chat.dao.model.Audit;
 import com.company.chat.dao.model.Message;
@@ -113,7 +114,26 @@ public class MessageServiceIT extends BaseIT {
 	@Test
 	void save_Test() throws Exception {
 
-		// (1) Add the new User
+		// (1) Invalid Message: null
+		InvalidInputException e1 = Assertions.assertThrows(InvalidInputException.class, () -> messageService.save(null));
+		Assertions.assertEquals("Invalid Message: sender, content or topic is null", e1.getMessage());
+
+		// (2) Invalid Message: null sender, content and topic
+		Message invalidMessage = new Message(null, null, null, null, null);
+		InvalidInputException e2 = Assertions.assertThrows(InvalidInputException.class, () -> messageService.save(invalidMessage));
+		Assertions.assertEquals("Invalid Message: sender, content or topic is null", e2.getMessage());
+
+		// (3) Invalid Message: null content and topic
+		invalidMessage.setSender("Sender set");
+		InvalidInputException e3 = Assertions.assertThrows(InvalidInputException.class, () -> messageService.save(invalidMessage));
+		Assertions.assertEquals("Invalid Message: sender, content or topic is null", e3.getMessage());
+
+		// (3) Invalid Message: null topic
+		invalidMessage.setContent("Content set");
+		InvalidInputException e4 = Assertions.assertThrows(InvalidInputException.class, () -> messageService.save(invalidMessage));
+		Assertions.assertEquals("Invalid Message: sender, content or topic is null", e4.getMessage());
+
+		// (4) Add the new Message
 		Message newMessage = new Message(null, null, content_1, sender_1, topic);
 		String res_1 = messageService.save(newMessage);
 		Assertions.assertNotNull(res_1);

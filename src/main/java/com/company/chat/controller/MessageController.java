@@ -1,5 +1,7 @@
 package com.company.chat.controller;
 
+import com.company.chat.dao.exceptions.InvalidInputException;
+import com.company.chat.dao.exceptions.ItemAlreadyExistException;
 import com.company.chat.dao.exceptions.ItemNotFoundException;
 import com.company.chat.dao.manager.MessageService;
 import com.company.chat.dao.model.Message;
@@ -33,7 +35,11 @@ public class MessageController extends AbstractController {
 
 			// (2) Set the Outcome
 			outcome = "Successfully added Message with ID = " + savedId;
-		} catch (Exception e) {
+		} catch (InvalidInputException e) {
+			String msg = String.format("Cannot save Message=%s", message);
+			log.error(msg, e);
+			outcome = e.getMessage();
+		}  catch (Exception e) {
 			String msg = String.format("Exception while saving Message=%s", message);
 			log.error(msg, e);
 			outcome = "Unexpected Internal Error";

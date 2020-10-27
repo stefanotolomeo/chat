@@ -1,5 +1,6 @@
 package com.company.chat.controller;
 
+import com.company.chat.dao.exceptions.InvalidInputException;
 import com.company.chat.dao.exceptions.ItemAlreadyExistException;
 import com.company.chat.dao.exceptions.ItemNotFoundException;
 import com.company.chat.dao.manager.UserService;
@@ -29,7 +30,7 @@ public class UserController extends AbstractController {
 
 			// (3) Set the Outcome
 			outcome = "Successfully added User with ID = " + savedId;
-		} catch (ItemAlreadyExistException e) {
+		} catch (ItemAlreadyExistException | InvalidInputException e) {
 			String msg = String.format("Cannot save User=%s", user);
 			log.error(msg, e);
 			outcome = e.getMessage();
@@ -100,7 +101,7 @@ public class UserController extends AbstractController {
 
 			// (3) Set the Outcome
 			outcome = "Successfully updated User with ID = " + user.getId();
-		} catch (ItemNotFoundException e) {
+		} catch (InvalidInputException | ItemNotFoundException e) {
 			String msg = String.format("Cannot update User=%s", user);
 			log.error(msg, e);
 			outcome = e.getMessage();

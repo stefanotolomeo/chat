@@ -2,6 +2,7 @@ package com.company.chat.dao.manager;
 
 import com.company.chat.config.Constants;
 import com.company.chat.dao.exceptions.FailedCRUDException;
+import com.company.chat.dao.exceptions.InvalidInputException;
 import com.company.chat.dao.exceptions.ItemNotFoundException;
 import com.company.chat.dao.model.ItemType;
 import com.company.chat.dao.model.Message;
@@ -25,6 +26,10 @@ public class MessageService extends AbstractService implements IService<Message>
 	 * @throws FailedCRUDException: if at least one error occurs
 	 */
 	public String save(final Message message) throws Exception {
+
+		if(message== null || message.getSender() == null || message.getContent() == null || message.getTopic() == null){
+			throw new InvalidInputException("Invalid Message: sender, content or topic is null");
+		}
 
 		// (1) Set Timestamp for Message
 		LocalDateTime timestamp = LocalDateTime.now();

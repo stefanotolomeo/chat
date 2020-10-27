@@ -1,6 +1,7 @@
 package com.company.chat.dao.manager;
 
 import com.company.chat.config.Constants;
+import com.company.chat.dao.exceptions.InvalidInputException;
 import com.company.chat.dao.exceptions.ItemAlreadyExistException;
 import com.company.chat.dao.exceptions.ItemNotFoundException;
 import com.company.chat.dao.model.Audit;
@@ -103,11 +104,31 @@ public class UserServiceIT extends BaseIT {
 	@Test
 	void update_Test() throws Exception {
 
-		// (1) User ID to be deleted not found
-		ItemNotFoundException e = Assertions.assertThrows(ItemNotFoundException.class, () -> userService.update(u1));
-		Assertions.assertEquals("Cannot Update: User ID not found", e.getMessage());
+		// (1) Invalid User: null
+		InvalidInputException e1 = Assertions.assertThrows(InvalidInputException.class, () -> userService.update(null));
+		Assertions.assertEquals("Invalid User: id or username is null", e1.getMessage());
 
-		// (2) Add one user, the check it
+		// (2) Invalid User: null ID and username
+		User invalidUser = new User(null, null);
+		InvalidInputException e2 = Assertions.assertThrows(InvalidInputException.class, () -> userService.update(invalidUser));
+		Assertions.assertEquals("Invalid User: id or username is null", e2.getMessage());
+
+		// (3) Invalid User: null ID
+		invalidUser.setUsername("Valid username");
+		InvalidInputException e3 = Assertions.assertThrows(InvalidInputException.class, () -> userService.update(invalidUser));
+		Assertions.assertEquals("Invalid User: id or username is null", e3.getMessage());
+
+		// (4) Invalid User: null ID
+		invalidUser.setUsername(null);
+		invalidUser.setId("9999");
+		InvalidInputException e4 = Assertions.assertThrows(InvalidInputException.class, () -> userService.update(invalidUser));
+		Assertions.assertEquals("Invalid User: id or username is null", e4.getMessage());
+
+		// (5) User ID to be deleted not found
+		ItemNotFoundException e5 = Assertions.assertThrows(ItemNotFoundException.class, () -> userService.update(u1));
+		Assertions.assertEquals("Cannot Update: User ID not found", e5.getMessage());
+
+		// (6) Add one user, the check it
 		userHashOperations.put(Constants.USER_CACHE, id_1, u1);
 		User res_1 = userService.update(u1);
 		makeAssertionsOnUsers(u1, res_1);
@@ -118,17 +139,26 @@ public class UserServiceIT extends BaseIT {
 	@Test
 	void save_Test() throws Exception {
 
-		// (1) Add the new User
+		// (1) Invalid User: null
+		InvalidInputException e1 = Assertions.assertThrows(InvalidInputException.class, () -> userService.save(null));
+		Assertions.assertEquals("Invalid User: username is null", e1.getMessage());
+
+		// (2) Invalid User: null username
+		User invalidUser = new User("8888", null);
+		InvalidInputException e2 = Assertions.assertThrows(InvalidInputException.class, () -> userService.save(invalidUser));
+		Assertions.assertEquals("Invalid User: username is null", e2.getMessage());
+
+		// (3) Add the new User
 		User newUser = new User(null, username_1);
 		String res_1 = userService.save(newUser);
 		Assertions.assertNotNull(res_1);
 		Assertions.assertEquals(newUser.getId(), res_1);
 
-		// (2) Same username, throw exception
-		ItemAlreadyExistException e = Assertions.assertThrows(ItemAlreadyExistException.class, () -> userService.save(u1));
-		Assertions.assertEquals("Cannot Save: username is not unique", e.getMessage());
+		// (4) Same username, throw exception
+		ItemAlreadyExistException e3 = Assertions.assertThrows(ItemAlreadyExistException.class, () -> userService.save(u1));
+		Assertions.assertEquals("Cannot Save: username is not unique", e3.getMessage());
 
-		// (3) Ensure the audit record has been inserted
+		// (5) Ensure the audit record has been inserted
 		List<Audit> auditList = auditHashOperations.values(Constants.AUDIT_CACHE);
 		Assertions.assertNotNull(auditList);
 		Assertions.assertFalse(auditList.isEmpty());

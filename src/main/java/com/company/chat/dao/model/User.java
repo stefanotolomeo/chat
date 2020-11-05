@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 
-@Component
 public class User extends AbstractItem implements Serializable {
 
 	private static final long serialVersionUID = 7146197649656866689L;

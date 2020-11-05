@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Component
 public class Message extends AbstractItem implements Serializable {
 
 	private static final long serialVersionUID = 5061588246570750234L;

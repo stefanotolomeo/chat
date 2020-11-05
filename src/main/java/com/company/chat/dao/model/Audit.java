@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Component
 public class Audit implements Serializable {
 
 	private static final long serialVersionUID = 4845793731091289525L;
